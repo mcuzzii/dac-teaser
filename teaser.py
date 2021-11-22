@@ -172,37 +172,37 @@ class scene_3(MovingCameraScene):
     def construct(self):
         curve = SVGMobject("assets/svg_images/test svg", stroke_opacity=1, stroke_color=WHITE, stroke_width=0.02,
                            fill_opacity=0).scale(10.5)
-        #quadrect = AABB(center=[0, 1], width=19.5, height=22.5)
-        #curve.append_points(curve.get_all_points())
-        #borders = []
-        #side_length = 2 * self.p_radius + 0.001
-        #for i in [8, 9, 3, 4, 2, 7, 6]:
-        #    if i in [8, 9]:
-        #        curve[i].set_stroke(width=2)
-        #    else:
-        #        curve[i].set_stroke(width=1)
-        #    lines = []
-        #    start_point = 0
-        #    for j in np.linspace(start=0, stop=1, num=250):
-        #        if j == 0:
-        #            continue
-        #        wall = Wall(curve[i].point_from_proportion(start_point), curve[i].point_from_proportion(j))
-        #        side_length = max(side_length, wall.length)
-        #        lines.append(wall)
-        #        start_point = j
-        #    borders.append(lines)
-        #df1 = pd.read_csv("data/ScatterArt.csv", header=None)
-        #df1 = df1.values.tolist()
-        #particles = VGroup()
-        #i = 0
-        #while i < len(df1):
-        #    df1[i] = [x for x in df1[i] if str(x) != 'nan']
-        #    for j in range(2, int(self.rough_prop * len(df1[i]))):
-        #        p = Particle([-6 + 12 * random.random(), 7.5 + 2 * random.random()], designation=df1[i][0],
-        #                               radius=self.p_radius, fill_color=df1[i][1])
-        #        particles.add(p)
-        #        self.counter += 1
-        #    i += 2
+        quadrect = AABB(center=[0, 1], width=19.5, height=22.5)
+        curve.append_points(curve.get_all_points())
+        borders = []
+        side_length = 2 * self.p_radius + 0.001
+        for i in [8, 9, 3, 4, 2, 7, 6]:
+            if i in [8, 9]:
+                curve[i].set_stroke(width=2)
+            else:
+                curve[i].set_stroke(width=1)
+            lines = []
+            start_point = 0
+            for j in np.linspace(start=0, stop=1, num=250):
+                if j == 0:
+                    continue
+                wall = Wall(curve[i].point_from_proportion(start_point), curve[i].point_from_proportion(j))
+                side_length = max(side_length, wall.length)
+                lines.append(wall)
+                start_point = j
+            borders.append(lines)
+        df1 = pd.read_csv("data/ScatterArt.csv", header=None)
+        df1 = df1.values.tolist()
+        particles = VGroup()
+        i = 0
+        while i < len(df1):
+            df1[i] = [x for x in df1[i] if str(x) != 'nan']
+            for j in range(2, int(self.rough_prop * len(df1[i]))):
+                p = Particle([-6 + 12 * random.random(), 7.5 + 2 * random.random()], designation=df1[i][0],
+                                       radius=self.p_radius, fill_color=df1[i][1])
+                particles.add(p)
+                self.counter += 1
+            i += 2
 
         def match(particle, wall):
             if wall in borders[0] + borders[1]:
@@ -286,8 +286,8 @@ class scene_3(MovingCameraScene):
         text4 = Text("Frequency", font_size=45, font="Futura").rotate(PI / 2).next_to(graph[2], LEFT, buff=0.1)
         self.camera.frame.set_width(15).shift(UP * 8 + LEFT * 0.25)
         self.add(text1, text2, text3)
-        #particles.add_updater(updater)
-        #self.add(particles)
+        particles.add_updater(updater)
+        self.add(particles)
         self.wait(3)
         self.play(self.camera.frame.animate.move_to((2, 1, 0)), run_time=2)
         self.wait(3)
@@ -298,7 +298,7 @@ class scene_3(MovingCameraScene):
                                  Write(text4), lag_ratio=0.5), run_time=2)
         self.wait(2)
         self.add_foreground_mobject(graph[0])
-        #particles.clear_updaters()
+        particles.clear_updaters()
 
         def gravity(mob, dt):
             for i in range(self.counter):
@@ -307,8 +307,8 @@ class scene_3(MovingCameraScene):
                 mob[i].vector = add(mob[i].vector, mul([x_cor, y_cor], dt))
                 mob[i].pos = add(mob[i].pos, mul(mob[i].vector, dt))
                 mob[i].move_to(np.array(mob[i].pos + [0]))
-        #particles.add_updater(gravity)
-        #self.add(particles)
+        particles.add_updater(gravity)
+        self.add(particles)
         self.play(AnimationGroup(*[FadeOut(g) for g in graph], lag_ratio=0.2), FadeOut(text4),
                   self.camera.frame.animate.move_to((-7, -9.25, 0)).set_width(2), run_time=3, rate_func=smooth)
 
